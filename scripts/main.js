@@ -540,6 +540,7 @@ const Overlay = {
     this.layout();
     this.refresh();
     this.timer = setInterval(() => this.refresh(), POLL_MS);
+    Hooks.callAll("snapframeBuilt", this);
   },
 
   /** Põe a camada dentro do grupo primário, logo abaixo do fundo da cena. */
@@ -593,6 +594,7 @@ const Overlay = {
       try { d.lkInfo?.handleResize?.(); } catch (e) { /* ignora */ }
     }
     this.placeControls();
+    Hooks.callAll("snapframeLayout", this);
   },
 
   /** Posiciona os botões na tela, na parte de baixo de cada foto. */
@@ -740,6 +742,7 @@ const Overlay = {
   },
 
   destroy() {
+    if (this.layer) Hooks.callAll("snapframeDestroy", this);
     clearInterval(this.timer); this.timer = null;
     for (const d of this.slotEls.values()) {
       liveKitUnobserve(d);
@@ -1052,8 +1055,14 @@ Hooks.once("ready", () => {
     toggle: on => toggleSceneMesa(on),
     toggleMyCamera,
     toggleMyMic,
-    detectSlots
+    detectSlots,
+    // Usado pelo SnapFrame Premium e por outros módulos
+    overlay: Overlay,
+    dockViewFor,
+    streamFor,
+    isActive
   };
+  Hooks.callAll("snapframeReady", game.modules.get(MOD).api);
 });
 
 Hooks.on("canvasReady", () => Overlay.build());
