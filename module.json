@@ -2,7 +2,7 @@
   "id": "mesa-de-cameras",
   "title": "SnapFrame",
   "description": "Places your players' webcams behind the transparent areas of the scene background. Finds the areas automatically and lets you choose who sits in each one. / Coloca as câmeras dos jogadores atrás das áreas transparentes do fundo da cena.",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "authors": [
     {
       "name": "Angelo Magno"
