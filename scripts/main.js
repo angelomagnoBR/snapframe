@@ -840,7 +840,12 @@ const Editor = {
       // Reaproveita os jogadores já escolhidos, pela ordem
       const prevUsers = this.cfg.slots.map(s => s.user);
       const prevImgs = this.cfg.slots.map(s => s.img);
-      found.forEach((s, i) => { s.user = prevUsers[i] ?? null; if (prevImgs[i]) s.img = prevImgs[i]; });
+      const prevPortraits = this.cfg.slots.map(s => s.portrait);
+      found.forEach((s, i) => {
+        s.user = prevUsers[i] ?? null;
+        if (prevImgs[i]) s.img = prevImgs[i];
+        if (prevPortraits[i]) s.portrait = prevPortraits[i];
+      });
       this.cfg.slots = found;
       this.renderStage();
       if (!found.length) ui.notifications.warn("Não achei áreas transparentes nessa imagem. Você pode adicionar áreas manualmente.");
@@ -942,6 +947,8 @@ const Editor = {
       });
       box.addEventListener("pointerdown", ev => this.startDrag(ev, box, slot, stage));
       stage.appendChild(box);
+      // Deixa módulos extras (ex.: SnapFrame Premium) acrescentarem controles em cada área
+      Hooks.callAll("snapframeEditorSlot", { box, slot, stage, editor: this });
     });
   },
 
